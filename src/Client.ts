@@ -175,6 +175,7 @@ export class Client extends AsyncEventEmitter<Events> {
 
   configuration: RevoltConfig | undefined;
   #session: Session | undefined;
+  #token: string | undefined;
   user: User | undefined;
 
   readonly ready: Accessor<boolean>;
@@ -318,9 +319,14 @@ export class Client extends AsyncEventEmitter<Events> {
    * Update API object to use authentication.
    */
   #updateHeaders(): void {
+    const session = this.#session;
+
     (this.api as API) = new API({
       baseURL: this.options.baseURL,
       authentication: {
+        headers: {
+          "X-Session-Token": this.#token
+        },
         revolt: this.#session,
       },
     });
@@ -336,10 +342,12 @@ export class Client extends AsyncEventEmitter<Events> {
     const data = await this.api.post("/auth/session/login", details);
     if (data.result === "Success") {
       this.#session = data;
-      return await this.connect();
-    } else {
-      throw "MFA not implemented!";
-    }
+      this.#token = data.token;
+      this.#updateHeaders();
+      return this.connect();
+    } 
+    
+    throw "MFA not implemented!";
   }
 
   /**
