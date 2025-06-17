@@ -175,7 +175,7 @@ export class Client extends AsyncEventEmitter<Events> {
 
   configuration: RevoltConfig | undefined;
   #session: Session | undefined;
-  #token: string | undefined;
+  sessionToken: string | undefined;
   user: User | undefined;
 
   readonly ready: Accessor<boolean>;
@@ -325,7 +325,7 @@ export class Client extends AsyncEventEmitter<Events> {
       baseURL: this.options.baseURL,
       authentication: {
         headers: {
-          "X-Session-Token": this.#token
+          "X-Session-Token": this.sessionToken
         },
         revolt: this.#session,
       },
@@ -342,7 +342,7 @@ export class Client extends AsyncEventEmitter<Events> {
     const data = await this.api.post("/auth/session/login", details);
     if (data.result === "Success") {
       this.#session = data;
-      this.#token = data.token;
+      this.sessionToken = data.token;
       this.#updateHeaders();
       return this.connect();
     } 
