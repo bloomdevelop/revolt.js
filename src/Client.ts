@@ -203,8 +203,8 @@ export class Client extends AsyncEventEmitter<Events> {
        * @param retryCount Count
        * @returns Delay in seconds
        */
-      retryDelayFunction(retryCount) {
-        return (Math.pow(2, retryCount) - 1) * (0.8 + Math.random() * 0.4);
+      retryDelayFunction(retryCount: number) {
+        return ((2 ** retryCount) - 1) * (0.8 + Math.random() * 0.4);
       },
       /**
        * Check whether a channel is muted
@@ -249,7 +249,10 @@ export class Client extends AsyncEventEmitter<Events> {
       switch (state) {
         case ConnectionState.Connected:
           batch(() => {
-            this.servers.forEach((server) => server.resetSyncStatus());
+            for (const server of this.servers.values()) {
+              server.resetSyncStatus();
+            }
+
             this.#setConnectionFailureCount(0);
             this.emit("connected");
           });
@@ -407,8 +410,8 @@ export class Client extends AsyncEventEmitter<Events> {
       return `${this.configuration.features.january.url}/proxy?url=${encodeURIComponent(
         url,
       )}`;
-    } else {
-      return url;
     }
+
+    return url;
   }
 }
