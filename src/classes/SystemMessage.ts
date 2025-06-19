@@ -3,7 +3,7 @@ import type { SystemMessage as APISystemMessage } from "revolt-api";
 import type { Client } from "../Client.js";
 
 import type { User } from "./User.js";
-import { Message } from "./index.js";
+import type { Message } from "./index.js";
 
 /**
  * System Message
