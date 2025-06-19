@@ -4,6 +4,8 @@
 
 **revolt.js** is a JavaScript library for interacting with the entire Revolt API.
 
+> This is a fork from `revoltchat/revolt.js` and it's modified for client usage
+
 ## Requirements
 
 To use this module, you must be using at least:
